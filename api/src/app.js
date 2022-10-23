@@ -23,11 +23,12 @@ app.use(bodyParser.urlencoded({
     limit: '10mb',
     parameterLimit: 100000
 }));
+app.use(bodyParser.json());
 app.use(express.static('public'));
 app.use('/',express.static('public'));
 
 process.env.TZ = 'Asia/Kolkata'; // here is the magical line
 
-require('./router/admin.js')(app);
-// require('./router/app.js')(app);
+require('./router/user.js')(app);
+require('./router/technologies.js')(app);
 module.exports = app;

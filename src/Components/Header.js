@@ -5,8 +5,8 @@ export default function Header() {
     const auth = useAuth()
 
     const logOut = () => {
-        localStorage.removeItem('pw_user');
-        sessionStorage.removeItem('pw_user');
+        localStorage.removeItem('pms_user');
+        sessionStorage.removeItem('pms_user');
         auth.setUser(null);
         window.location.reload()
     }

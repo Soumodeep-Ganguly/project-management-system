@@ -1,20 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom'
-import Swal from 'sweetalert2'
 import axios from 'axios';
 import { BASE_URL } from './../env'
-
-const Toast = Swal.mixin({
-    toast: true,
-    position: 'top-end',
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer)
-        toast.addEventListener('mouseleave', Swal.resumeTimer)
-    }
-})
+import { Toast } from './../Utils/Toast'
 
 export default function SignIn() {
     const [Email, setEmail] = useState("")
@@ -25,8 +13,8 @@ export default function SignIn() {
 
     useEffect(() => {
         // Check if is Logged in
-        let isLocalAuth = localStorage.getItem('pw_user')
-        let isSessionAuth = sessionStorage.getItem('pw_user');
+        let isLocalAuth = localStorage.getItem('pms_user')
+        let isSessionAuth = sessionStorage.getItem('pms_user');
 
         if(isLocalAuth || isSessionAuth) navigate("/")
     }, [])
@@ -48,7 +36,7 @@ export default function SignIn() {
     
         setIsLoading(true)
         axios
-            .post(BASE_URL+"/admin/login", data,{
+            .post(BASE_URL+"/sign-in", data,{
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                     }
@@ -57,19 +45,16 @@ export default function SignIn() {
                 // Validating form
                 setIsLoading(false)
                 if(res.data.status === 'success'){
-                    if(RememberMe) sessionStorage.setItem('pw_remember', "true");
-                    sessionStorage.setItem('pw_email', res.data.email);
-                    // console.log(res.data);
-                    Toast.fire({ icon: 'success', title: `OTP sent to your email.` })
-                    navigate("/two-step-verification")
-                    // window.location.reload()
-                } else if(res.data.status === "error") Toast.fire({ icon: 'error', title: res.data.message })
-                else Toast.fire({ icon: 'error', title: 'Cannot process request' })
+                    if(RememberMe) localStorage.setItem('pms_user', res.data.token);
+                    else sessionStorage.setItem('pms_user', res.data.token);
+                    Toast.fire({ icon: 'success', title: 'Signed in successfully' })
+                    window.location.reload()
+                } else Toast.fire({ icon: 'error', title: 'Cannot process request' })
             })
             .catch((err) => {
                 setIsLoading(false)
-                console.log(err);
-                Toast.fire({ icon: 'error', title: 'Please Try Again' })
+                // console.log(err);
+                Toast.fire({ icon: 'error', title: err?.response?.data?.message })
             })
     }
 
@@ -105,8 +90,13 @@ export default function SignIn() {
                                 </div>
                             </div>
                             <div className="card-footer" style={{ backgroundColor: '#ebebf0' }}>
-                                <button type="submit" className="btn btn-dark float-right" onClick={(e) => signUserIn(e)}>Log in</button>
-                                {/* <button type="submit" className="btn btn-default float-right">Cancel</button> */}
+                                <button type="submit" className="btn btn-dark float-left" onClick={(e) => signUserIn(e)} disabled={IsLoading}>Sign in</button>
+                                <div className="float-right">
+                                    Don't have an account? 
+                                    <Link to="/sign-up" className="ml-2">
+                                        Sign Up
+                                    </Link>
+                                </div>
                             </div>
                         </form>
                     </div>

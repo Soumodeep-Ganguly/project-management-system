@@ -1,14 +1,23 @@
-import React from 'react'
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react'
 import Logo from './../Assets/img/AdminLTELogo.png'
+import getAxiosInstance from './../Utils/axios'
 
 export default function Menu() {
+    const [isMentor, setIsMentor] = useState(false)
+
+    useEffect(() => {
+        getAxiosInstance()
+            .get("/me")
+            .then((res) => setIsMentor(res.data.result.mentor))
+            .catch((err) => console.log(err));
+    },[])
+
     return (
         <>
             <aside className="main-sidebar sidebar-light-primary elevation-4">
                 <a href="#" className="brand-link">
                     <img src={Logo} alt="AdminLTE Logo" className="brand-image img-circle elevation-3" style={{opacity: '.8'}} />
-                    <span className="brand-text font-weight-light">PW ADMIN</span>
+                    <span className="brand-text font-weight-light">PMS ADMIN</span>
                 </a>
                 <div className="sidebar">
                     <nav style={{ marginTop: 80 }}>
@@ -22,77 +31,54 @@ export default function Menu() {
                                 </a>
                             </li>
 
-                            <li className={`nav-item ${window.location.pathname.indexOf('user') >= 0  && 'menu-is-opening menu-open'}`}>
-                                <a href="#" className={`nav-link ${window.location.pathname.indexOf('user') >= 0  && 'active'}`}>
+                            <li className={`nav-item ${window.location.pathname.indexOf('technologies') >= 0  && 'menu-is-opening menu-open'}`}>
+                                <a href="#" className={`nav-link ${window.location.pathname.indexOf('technologies') >= 0  && 'active'}`}>
                                     <i className="nav-icon fas fa-users" />
                                     <p>
-                                        Manage Users
+                                        Manage Technologies
                                         <i className="fas fa-angle-left right" />
                                     </p>
                                 </a>
                                 <ul className="nav nav-treeview">
                                     <li className="nav-item">
-                                        <a href="/all-users" className={`nav-link ${window.location.pathname.indexOf('/all-users') >= 0  && 'active'}`}>
+                                        <a href="/technologies" className={`nav-link ${window.location.pathname === '/technologies'  && 'active'}`}>
                                             <i className="far fa-circle nav-icon" />
-                                            <p>All Users</p>
+                                            <p>All Technologies</p>
                                         </a>
                                     </li>
                                     <li className="nav-item">
-                                        <a href="/add-user" className={`nav-link ${window.location.pathname.indexOf('/add-user') >= 0  && 'active'}`}>
+                                        <a href="/technologies/add" className={`nav-link ${window.location.pathname.indexOf('/technologies/add') >= 0  && 'active'}`}>
                                             <i className="far fa-circle nav-icon" />
-                                            <p>Add Users</p>
+                                            <p>Add Technologies</p>
                                         </a>
                                     </li>
                                 </ul>
                             </li>
 
-                            <li className={`nav-item ${window.location.pathname.indexOf('/location') >= 0  && 'menu-is-opening menu-open'}`}>
-                                <a href="#" className={`nav-link ${window.location.pathname.indexOf('/location') >= 0  && 'active'}`}>
-                                    <i className="nav-icon fas fa-location-arrow" />
+                            <li className={`nav-item ${window.location.pathname.indexOf('projects') >= 0  && 'menu-is-opening menu-open'}`}>
+                                <a href="#" className={`nav-link ${window.location.pathname.indexOf('projects') >= 0  && 'active'}`}>
+                                    <i className="nav-icon fas fa-users" />
                                     <p>
-                                        Locations
+                                        Manage Projects
                                         <i className="fas fa-angle-left right" />
                                     </p>
                                 </a>
                                 <ul className="nav nav-treeview">
                                     <li className="nav-item">
-                                        <a href="/location/countries" className={`nav-link ${window.location.pathname.indexOf('/countries') >= 0  && 'active'}`}>
+                                        <a href="/projects" className={`nav-link ${window.location.pathname.indexOf('/projects') >= 0  && 'active'}`}>
                                             <i className="far fa-circle nav-icon" />
-                                            <p>Countries</p>
+                                            <p>Your Projects</p>
                                         </a>
                                     </li>
-                                    <li className="nav-item">
-                                        <a href="/location/states" className={`nav-link ${window.location.pathname.indexOf('/states') >= 0  && 'active'}`}>
+                                    {isMentor && <li className="nav-item">
+                                        <a href="/projects/add" className={`nav-link ${window.location.pathname.indexOf('/add') >= 0  && 'active'}`}>
                                             <i className="far fa-circle nav-icon" />
-                                            <p>States</p>
+                                            <p>Add Projects</p>
                                         </a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a href="/location/cities" className={`nav-link ${window.location.pathname.indexOf('/cities') >= 0  && 'active'}`}>
-                                            <i className="far fa-circle nav-icon" />
-                                            <p>Cities</p>
-                                        </a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a href="/location/buildings" className={`nav-link ${window.location.pathname.indexOf('/buildings') >= 0  && 'active'}`}>
-                                            <i className="far fa-circle nav-icon" />
-                                            <p>Buildings</p>
-                                        </a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a href="/location/floors" className={`nav-link ${window.location.pathname.indexOf('/floors') >= 0  && 'active'}`}>
-                                            <i className="far fa-circle nav-icon" />
-                                            <p>Floors</p>
-                                        </a>
-                                    </li>
-                                    <li className="nav-item">
-                                        <a href="/location/screens" className={`nav-link ${window.location.pathname.indexOf('/screens') >= 0  && 'active'}`}>
-                                            <i className="far fa-circle nav-icon" />
-                                            <p>Screens</p>
-                                        </a>
-                                    </li>
+                                    </li>}
                                 </ul>
                             </li>
+
                         </ul>
                     </nav>
                 </div>
