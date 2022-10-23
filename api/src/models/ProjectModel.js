@@ -20,9 +20,8 @@ var ProjectSchema = mongoose.Schema({
         default: ''
     }],
     members: [{
-        type: Schema.Types.ObjectId, 
-        ref: 'users', 
-        default: null
+        type: String,
+        default: ''
     }],
     technologies: [{
         type: Schema.Types.ObjectId, 

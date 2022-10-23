@@ -26,8 +26,18 @@ module.exports = {
 
     technology_list: async function (req, res) {
         try {
-            let technologies = await Technology.find({})
+            let technologies = await Technology.find({ deleted: 0 })
             res.send({ status: "success", result: technologies });
+        } catch (err) {
+            console.log("TECHNOLOGY ADD CATCH ", err)
+            res.status(500).send({ status: "error", message: "Internal server error." });
+        }
+    },
+
+    delete_technology: async function (req, res) {
+        try {
+            await Technology.findOneAndUpdate({ _id: req.params.id }, { deleted: 1 }, { new: true })
+            res.send({ status: "success", message: "Technology deleted successfully." });
         } catch (err) {
             console.log("TECHNOLOGY ADD CATCH ", err)
             res.status(500).send({ status: "error", message: "Internal server error." });

@@ -59,34 +59,24 @@ export default function Technologies() {
         }).then((result) => {
             if (result.isConfirmed) {
                 setIsLoading(true);
-
-                const params = { id: id }
-        
-                // converting (json --> form-urlencoded)
-                const data = Object.keys(params)
-                .map((key) => `${key}=${encodeURIComponent(params[key])}`)
-                .join('&');
-
                 getAxiosInstance()
-                .post("/admin/delete-technology", data, {
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+                .delete("/technology/"+id)
+                    .then((res) => {
+                        // Validating form
+                        setIsLoading(false);
+                        if(res.data.status === 'success'){
+                            Toast.fire({ icon: 'success', title: "Successfully deleted technology" })
+                            getTechnologies();
+                        }else{
+                            console.log(res.data);
+                            Toast.fire({ icon: 'error', title: "Unable to delete technology" })
+                        }
                     })
-                .then((res) => {
-                    // Validating form
-                    setIsLoading(false);
-                    if(res.data.status === 'success'){
-                        Toast.fire({ icon: 'success', title: "Successfully deleted technology" })
-                        getTechnologies();
-                    }else{
-                        console.log(res.data);
-                        Toast.fire({ icon: 'error', title: "Unable to delete technology" })
-                    }
-                })
-                .catch((err) => {
-                    Toast.fire({ icon: 'error', title: "Unexpected Error" })
-                    setIsLoading(false);
-                    console.log(err);
-                });
+                    .catch((err) => {
+                        Toast.fire({ icon: 'error', title: "Unexpected Error" })
+                        setIsLoading(false);
+                        console.log(err);
+                    });
             }
         })
     }
@@ -150,14 +140,9 @@ export default function Technologies() {
                                                         ))}</td>
                                                         <td>{technology.status === 1 ? "Active" : "Inactive"}</td>
                                                         <td>
-                                                            <div style={{ display: 'flex' }}>
-                                                                <button type="button" class="btn btn-success btn-sm ml-1" onClick={() => { window.location.href = `/technologies/${technology._id}/edit` }}>
-                                                                    <i className="fas fa-pen"></i>
-                                                                </button>
-                                                                <button type="button" class="btn btn-danger btn-sm ml-1" onClick={() => deleteTechnology(technology._id)}>
-                                                                    <i className="fas fa-trash"></i>
-                                                                </button>
-                                                            </div>
+                                                            <button type="button" class="btn btn-danger btn-sm ml-1" onClick={() => deleteTechnology(technology._id)}>
+                                                                <i className="fas fa-trash"></i>
+                                                            </button>
                                                         </td>
                                                     </tr>
                                                 ))}

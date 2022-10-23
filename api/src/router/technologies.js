@@ -7,4 +7,6 @@ module.exports = function (app) {
 
         .get("/technologies", authenticateToken, technologyController.technology_list)
 
+        .delete("/technology/:id", authenticateToken, technologyController.delete_technology)
+
 };
